@@ -52,9 +52,9 @@ def build_cylinder(component: CylinderComponent):
                 .translate((0, 0, z_offset + geo.length / 2))
             )
 
-            shell_plate = outer.cut(inner)
+            plate_solid = outer.cut(inner)
 
-            all_solids.append(shell_plate)
+            all_solids.append(plate_solid)
 
         z_offset += geo.length
 

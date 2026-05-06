@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 
-from app.schema.cylinder import CylinderComponent
+from app.schema.component import Component
 
 
 class ProjectInfo(BaseModel):
@@ -10,4 +10,4 @@ class ProjectInfo(BaseModel):
 
 class Project(BaseModel):
     project: ProjectInfo
-    components: List[CylinderComponent]
+    components: List[Component]

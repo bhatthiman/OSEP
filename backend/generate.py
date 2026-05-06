@@ -18,13 +18,19 @@ with open(INPUT_FILE) as f:
 
 project = Project(**data)
 
-component = project.components[0]
+from app.geometry.dispatcher import build_component
 
-segments = build_cylinder(component)
+all_geometry = []
+
+for component in project.components:
+
+    geometry = build_component(component)
+
+    all_geometry.extend(geometry)
 
 assembly = cq.Assembly()
 
-for i, segment in enumerate(segments):
+for i, segment in enumerate(all_geometry):
     assembly.add(segment, name=f"segment_{i+1}")
 
 assembly.save(str(OUTPUT_FILE))

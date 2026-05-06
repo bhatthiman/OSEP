@@ -10,64 +10,206 @@
 
       "type": "cylinder",
 
-      "role": "shell",
+      "data": {
 
-      "segments": [
+        "role": "shell",
 
-        {
-          "id": "course_1",
+        "segments": [
 
-          "geometry": {
-            "inside_diameter": 2000,
-            "length": 3000,
-            "nominal_thickness": 16
+          {
+            "id": "course_1",
+
+            "geometry": {
+              "inside_diameter": 2000,
+              "length": 3000,
+              "nominal_thickness": 16
+            },
+
+            "material_id": "ASME_SA516_70",
+
+            "plates": [
+
+              {
+                "id": "plate_1",
+                "start_angle": 0,
+                "sweep_angle": 180
+              },
+
+              {
+                "id": "plate_2",
+                "start_angle": 180,
+                "sweep_angle": 180
+              }
+            ]
           },
 
-          "material_id": "ASME_SA516_70",
+          {
+            "id": "course_2",
 
-          "plates": [
+            "geometry": {
+              "inside_diameter": 2000,
+              "length": 3000,
+              "nominal_thickness": 18
+            },
+
+            "material_id": "ASME_SA516_70",
+
+            "plates": [
+
+              {
+                "id": "plate_1",
+                "start_angle": 90,
+                "sweep_angle": 180
+              },
+
+              {
+                "id": "plate_2",
+                "start_angle": 270,
+                "sweep_angle": 180
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "head_top",
+
+      "type": "head",
+
+      "data": {
+
+        "role": "top_head",
+
+        "head_type": "ellipsoidal_2_1",
+
+        "geometry": {
+          "inside_diameter": 2000,
+          "nominal_thickness": 18
+        },
+
+        "fabrication": {
+
+          "crown": {
+            "type": "crown_piece",
+            "diameter_percent": 30
+          },
+
+          "petals": [
 
             {
-              "id": "plate_1",
+              "id": "petal_1",
               "start_angle": 0,
-              "sweep_angle": 180
+              "sweep_angle": 90
             },
 
             {
-              "id": "plate_2",
+              "id": "petal_2",
+              "start_angle": 90,
+              "sweep_angle": 90
+            },
+
+            {
+              "id": "petal_3",
               "start_angle": 180,
-              "sweep_angle": 180
+              "sweep_angle": 90
+            },
+
+            {
+              "id": "petal_4",
+              "start_angle": 270,
+              "sweep_angle": 90
             }
           ]
         },
 
-        {
-          "id": "course_2",
+        "material_id": "ASME_SA516_70"
+      }
+    },
 
-          "geometry": {
-            "inside_diameter": 2000,
-            "length": 3000,
-            "nominal_thickness": 18
+    {
+      "id": "head_bottom",
+
+      "type": "head",
+
+      "data": {
+
+        "role": "bottom_head",
+
+        "head_type": "ellipsoidal_2_1",
+
+        "geometry": {
+          "inside_diameter": 2000,
+          "nominal_thickness": 18
+        },
+
+        "fabrication": {
+
+          "crown": {
+            "type": "crown_piece",
+            "diameter_percent": 30
           },
 
-          "material_id": "ASME_SA516_70",
-
-          "plates": [
+          "petals": [
 
             {
-              "id": "plate_1",
-              "start_angle": 90,
-              "sweep_angle": 180
+              "id": "petal_1",
+              "start_angle": 45,
+              "sweep_angle": 90
             },
 
             {
-              "id": "plate_2",
-              "start_angle": 270,
-              "sweep_angle": 180
+              "id": "petal_2",
+              "start_angle": 135,
+              "sweep_angle": 90
+            },
+
+            {
+              "id": "petal_3",
+              "start_angle": 225,
+              "sweep_angle": 90
+            },
+
+            {
+              "id": "petal_4",
+              "start_angle": 315,
+              "sweep_angle": 90
             }
           ]
-        }
-      ]
+        },
+
+        "material_id": "ASME_SA516_70"
+      }
+    }
+  ],
+
+  "placements": [
+
+    {
+      "component_id": "shell_1",
+
+      "origin": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+
+    {
+      "component_id": "head_top",
+
+      "attached_to": "shell_1",
+
+      "position": "top"
+    },
+
+    {
+      "component_id": "head_bottom",
+
+      "attached_to": "shell_1",
+
+      "position": "bottom"
     }
   ]
 }
