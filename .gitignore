@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+venv/
+node_modules/
+dist/
+build/
+*.step
+*.stl
+*.vtk
+*.msh
+.env
