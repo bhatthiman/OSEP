@@ -1,33 +1,56 @@
+# -----------------------------
 # Python
+# -----------------------------
+
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Virtual Environments
+# Virtual environments
 venv/
+.venv/
 
-# Node
+# -----------------------------
+# Node / Frontend
+# -----------------------------
+
 node_modules/
-
-# Build
 dist/
-build/
 
-# CAD / Mesh Outputs
-*.step
-*.stp
-*.stl
-*.vtk
-*.msh
+# Vite
+.vite/
 
-# Environment
-.env
+# -----------------------------
+# Build Outputs
+# -----------------------------
 
-# IDE
+outputs/*.step
+outputs/*.stl
+outputs/*.glb
+outputs/*.gltf
+
+# Reports
+reports/*.pdf
+
+# -----------------------------
+# OS / Editor
+# -----------------------------
+
+.DS_Store
+Thumbs.db
+
 .vscode/
 .idea/
 
-# OS
-.DS_Store
-Thumbs.db
+# -----------------------------
+# Logs
+# -----------------------------
+
+*.log
+
+# -----------------------------
+# Environment
+# -----------------------------
+
+.env
