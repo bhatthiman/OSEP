@@ -8,8 +8,26 @@ def export_component_stl(
     output_path
 ):
 
+    shapes = []
+
+    for solid in solids:
+
+        # Workplane
+        if hasattr(solid, "val"):
+
+            shapes.append(
+                solid.val()
+            )
+
+        # Already a CadQuery shape
+        else:
+
+            shapes.append(
+                solid
+            )
+
     compound = cq.Compound.makeCompound(
-        [solid.val() for solid in solids]
+        shapes
     )
 
     cq.exporters.export(

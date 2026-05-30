@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Canvas } from "@react-three/fiber"
 
@@ -10,21 +10,23 @@ import {
 import STLModel from "./STLModel"
 
 
-export default function Viewer() {
+export default function Viewer({
+  stlUrl
+}) {
 
   const [reloadKey, setReloadKey] =
     useState(Date.now())
 
 
-  async function rebuildModel() {
+  // -----------------------------------
+  // Reload model whenever URL changes
+  // -----------------------------------
 
-    await fetch(
-
-      "http://localhost:8000/projects/components/shell_1/preview"
-    )
+  useEffect(() => {
 
     setReloadKey(Date.now())
-  }
+
+  }, [stlUrl])
 
 
   return (
@@ -35,23 +37,6 @@ export default function Viewer() {
         height: "100vh"
       }}
     >
-
-      <button
-        onClick={rebuildModel}
-
-        style={{
-          position: "absolute",
-          zIndex: 100,
-          top: 20,
-          left: 20,
-          padding: "10px"
-        }}
-      >
-
-        Reload Geometry
-
-      </button>
-
 
       <Canvas
         camera={{
@@ -65,7 +50,10 @@ export default function Viewer() {
 
         <Grid args={[20000, 20000]} />
 
-        <STLModel reloadKey={reloadKey} />
+        <STLModel
+          stlUrl={stlUrl}
+          reloadKey={reloadKey}
+        />
 
         <OrbitControls />
 

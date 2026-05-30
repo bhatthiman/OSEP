@@ -5,6 +5,7 @@ import cadquery as cq
 
 from app.schema.project import Project
 from app.geometry.dispatcher import build_component
+from app.core.component_registry import registry
 
 
 class ProjectManager:
@@ -129,8 +130,26 @@ class ProjectManager:
         for component in self.project.components:
 
             if component.id == component_id:
-#replace with schema validation later
-                component.data.update(new_data)
+#replace with schema validation later - ok, updated.
+#                component.data.update(new_data)
+                schema_class = registry.get_schema(
+                    component.type
+                )
+
+                merged_data = {
+                    **component.data,
+                    **new_data
+                }
+
+                validated = schema_class(
+                    id=component.id,
+                    type=component.type,
+                    **merged_data
+                )
+
+                component.data = validated.model_dump(
+                    exclude={"id", "type"}
+                )
 
                 return component
 

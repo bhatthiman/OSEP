@@ -1,0 +1,32 @@
+{
+  "project": {
+    "name": "Untitled"
+  },
+  "components": [
+    {
+      "id": "cylinder_1",
+      "type": "cylinder",
+      "data": {
+        "role": "SHELL",
+        "segments": [
+          {
+            "id": "5000",
+            "geometry": {
+              "inside_diameter": 5000,
+              "length": 2500,
+              "nominal_thickness": 16
+            },
+            "material_id": "sa-516",
+            "plates": [
+              {
+                "id": "COURSE1",
+                "start_angle": 90,
+                "sweep_angle": 180
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

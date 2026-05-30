@@ -1,3 +1,5 @@
+import time
+
 from pathlib import Path
 
 from fastapi import APIRouter
@@ -5,6 +7,11 @@ from fastapi import APIRouter
 from app.core.project_manager import ProjectManager
 
 from app.exporters.preview_exporter import export_component_stl
+
+from app.schema.project import (
+    Project,
+    ProjectInfo
+)
 
 router = APIRouter()
 
@@ -18,6 +25,10 @@ EXAMPLE_PROJECT = (
     / "simple_vessel.json"
 )
 
+# --------------------------------------------------
+# Load Project
+# --------------------------------------------------
+
 @router.post("/load")
 def load_project():
 
@@ -27,7 +38,11 @@ def load_project():
 
     return project.model_dump()
 
-#for update    
+
+# --------------------------------------------------
+# Update Component
+# --------------------------------------------------
+
 @router.patch(
     "/components/{component_id}"
 )
@@ -49,11 +64,43 @@ def update_component(
         )
     )
 
+    # ------------------------------------------
+    # Generate unique preview filename
+    # ------------------------------------------
+
+    revision = int(time.time())
+
+    output_dir = Path("outputs")
+
+    output_dir.mkdir(exist_ok=True)
+
+    filename = (
+        f"{component_id}_{revision}.stl"
+    )
+
+    output_file = (
+        output_dir / filename
+    )
+
+    export_component_stl(
+        solids,
+        output_file
+    )
+
     return {
-        "component": component,
-        "generated_solids": len(solids)
+        "component_id": component_id,
+        "generated_solids": len(solids),
+        "preview_url": (
+            f"/outputs/{filename}"
+        ),
+        "revision": revision
     }
-#for geo
+
+
+# --------------------------------------------------
+# Get Geometry Info
+# --------------------------------------------------
+
 @router.get(
     "/components/{component_id}/geometry"
 )
@@ -79,7 +126,12 @@ def get_component_geometry(
         "component_id": component_id,
         "solid_count": len(solids)
     }
-#preview
+
+
+# --------------------------------------------------
+# Generate Preview
+# --------------------------------------------------
+
 @router.get(
     "/components/{component_id}/preview"
 )
@@ -101,13 +153,18 @@ def preview_component(
             )
         )
 
+    revision = int(time.time())
+
     output_dir = Path("outputs")
 
     output_dir.mkdir(exist_ok=True)
 
+    filename = (
+        f"{component_id}_{revision}.stl"
+    )
+
     output_file = (
-        output_dir
-        / f"{component_id}.stl"
+        output_dir / filename
     )
 
     export_component_stl(
@@ -116,6 +173,134 @@ def preview_component(
     )
 
     return {
-        "preview_file": str(output_file)
+        "preview_file": (
+            f"/outputs/{filename}"
+        ),
+        "revision": revision
     }
     
+# --------------------------------------------------
+@router.get("/active")
+def get_active_project():
+
+    if project_manager.project is None:
+        return None
+
+    return project_manager.project.model_dump()
+    
+from app.schema.component import Component
+
+# --------------------------------------------------
+# Add Empty Component
+# --------------------------------------------------
+
+@router.post("/components")
+def add_component(
+    payload: dict
+):
+
+    if project_manager.project is None:
+
+        raise ValueError(
+            "No active project"
+        )
+
+    component = Component(**payload)
+
+    project_manager.project.components.append(
+        component
+    )
+
+    return component.model_dump()
+    from app.schema.project import (
+    Project,
+    ProjectInfo
+)
+
+# --------------------------------------------------
+# Create Empty Project
+# --------------------------------------------------
+
+@router.post("/new")
+def new_project():
+
+    project = Project(
+        project=ProjectInfo(
+            name="Untitled"
+        ),
+        components=[]
+    )
+
+    project_manager.project = project
+
+    return project.model_dump()
+
+# --------------------------------------------------
+# Full Project Preview
+# --------------------------------------------------
+
+@router.get("/preview")
+def preview_project():
+
+    assembly = (
+        project_manager.rebuild_project()
+    )
+
+    solids = []
+
+    for component_solids in (
+        project_manager.generated_components.values()
+    ):
+
+        solids.extend(component_solids)
+
+    revision = int(time.time())
+
+    output_dir = Path("outputs")
+
+    output_dir.mkdir(exist_ok=True)
+
+    filename = (
+        f"project_{revision}.stl"
+    )
+
+    output_file = (
+        output_dir / filename
+    )
+
+    export_component_stl(
+        solids,
+        output_file
+    )
+
+    return {
+        "preview_file":
+            f"/outputs/{filename}"
+    }
+from app.schema.project import (
+    Project,
+    ProjectInfo
+)
+
+# --------------------------------------------------
+# Save Project
+# --------------------------------------------------
+
+@router.post("/save/{filename}")
+def save_project(filename: str):
+
+    if project_manager.project is None:
+        raise ValueError("No active project")
+
+    filepath = (
+        BASE_DIR
+        / "examples"
+        / f"{filename}.json"
+    )
+
+    project_manager.save_project(filepath)
+
+    return {
+        "status": "saved",
+        "filepath": str(filepath)
+    }

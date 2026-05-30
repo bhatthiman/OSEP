@@ -4,13 +4,14 @@ import { STLLoader } from "three-stdlib"
 
 
 export default function STLModel({
+  stlUrl,
   reloadKey
 }) {
 
   const geometry = useLoader(
     STLLoader,
 
-    `http://localhost:8000/outputs/shell_1.stl?v=${reloadKey}`
+    `${stlUrl}?v=${reloadKey}`
   )
 
   geometry.center()
